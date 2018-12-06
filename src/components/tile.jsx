@@ -29,14 +29,14 @@ export default class Tile extends React.Component {
             return 'weight--0';
         }
         
-        let val = Math.floor((this.state.weight / 255) * 100);
+        let val = Math.floor((this.state.weight / 355) * 100);
         
         return 'weight--' + val;
     }
 
     getPathClass() {
         if(this.state.isPath) {
-            return 'path';
+            return ' path';
         }
 
         return '';

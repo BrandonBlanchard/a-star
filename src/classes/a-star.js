@@ -148,6 +148,10 @@ export default class AStar {
 
         const current = this.field[x][y];
 
+        if(current.type === 'start') {
+            return false;
+        }
+
         if(current.type === 'end') {
             this.foundEnd = true;
             this.potentials = [];
@@ -174,14 +178,12 @@ export default class AStar {
     traceBack() {
         // Start from the end node and follow the lowest cost nodes back to the start.
         const end = this.endLocation;
-        console.log('tracing it baaaaack', end);
         this.traceNext(end.x, end.y);
 
     }
 
     // Look at neighbors, find the lowest cost, designate the lowest cost as the path.
     traceNext (x,y) {
-        console.log(x,y)
         this.getLowestTravelCostNeighbor(x,y);
     }
 
@@ -191,37 +193,36 @@ export default class AStar {
             [x, y-1], [x+1, y], [x, y+1], [x-1, y] 
         ];
 
-console.log(dirs);
-debugger;
-
+        // Default value that any tile should be able to beat.
         let lowest = { tile: { weight: 2000 } };
         
         // Find the lowest neighbor
         for(let i = 0; i < 4; i += 1) {
-            const dir = dirs[i];
+            const direction = { x: dirs[i][0], y: dirs[i][1]};
 
-            if(this.inRange(dir.x, dir.y)) {
+            if(this.inRange(direction.x, direction.y)) {
+                const tile = this.field[direction.x][direction.y];
                 
-                console.log(this.field[dir.x][dir.y]);
-    
-                if(this.field[dir.x][dir.y].type != end && this.field[dir.x][dir.y].weight < lowest.weight ) {
-                    lowest = {x: dir.x, y: dir.y, tile: this.field[dir.x][dir.y]};
+                if(tile.type === 'start') {
+                    return;
+                }
+
+                if(tile.type === 'end' || tile.type === 'wall' || tile.weight === 0) {
+                    continue;
+                }
+
+                if(tile.weight < lowest.tile.weight ) {
+                    lowest = {x: direction.x, y: direction.y, tile: this.field[direction.x][direction.y]};
                 }
             }
         }
 
-        if(lowest.tile.weight === 2000) { debugger; }
-
         // Designate the lowest as a path and update the map.
-        console.log(lowest.tile);
+        console.log('I picked', lowest.tile.weight, lowest.tile.type);
  
         lowest.tile.isPath = true;
-        this.UpdateField();
+        this.updateWeightsCB(this.field);
 
-        this.traceNext(lowest.x, lowest.y)
-        // setTimeout(() => {
-        //     const traceNext = this.traceNext.bind(this);
-        //     traceNext(lowest.x, lowest.y);
-        // }, 0);
+        setTimeout( () => { this.traceNext(lowest.x, lowest.y) }, 0);
     }
 }

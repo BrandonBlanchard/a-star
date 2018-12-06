@@ -114,7 +114,7 @@ export default class Grid extends React.Component {
                 { this.state.field.map( (row, rowIndex) => {
                     return(
                         row.map( (tile, tileIndex) => {
-                            return (<Tile key={rowIndex + tileIndex + tile.type + tile.weight + tile.isPath} type={ tile.type } weight={ tile.weight} path={ tile.isPath }></Tile>)
+                            return (<Tile key={rowIndex + tileIndex + tile.type + tile.weight + tile.isPath} type={ tile.type } weight={ tile.weight} isPath={ tile.isPath }></Tile>)
                         })
                     );
                 })}

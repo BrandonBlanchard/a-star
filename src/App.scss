@@ -58,6 +58,6 @@
 
 @for $i from 1 through 100 {
   .weight--#{$i} {
-    background-color: mix(#777734, #773477,$i); 
+    background-color: mix(#777734, #773477, $i); 
   }
 }
